@@ -9,13 +9,15 @@ with app.app_context():
 def home():
     return "Hello, World!"
 
+@app.route('/api')
+def api_health():
+    return jsonify({"status": "healthy"}), 200
 
 @app.route("/contacts", methods=["GET"])
 def get_contacts():
     contacts = Contact.query.all()
     json_contacts = list(map(lambda x: x.to_json(), contacts))
     return jsonify({"contacts": json_contacts})
-
 
 @app.route("/create_contact", methods=["POST"])
 def create_contact():
@@ -38,7 +40,6 @@ def create_contact():
 
     return jsonify({"message": "User created!"}), 201
 
-
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
     contact = Contact.query.get(user_id)
@@ -54,7 +55,6 @@ def update_contact(user_id):
     db.session.commit()
 
     return jsonify({"message": "User updated."}), 200
-
 
 @app.route("/delete_contact/<int:user_id>", methods=["DELETE"])
 def delete_contact(user_id):
